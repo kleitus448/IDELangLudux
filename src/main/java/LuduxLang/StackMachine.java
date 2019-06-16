@@ -18,14 +18,13 @@ public class StackMachine {
     }
 
     private Pair<Integer, Integer> getOpTokens(String operation) {
-        Token tokenOp1 = stack.pop(); Token tokenOp2 = stack.pop();
+        Token tokenOp2 = stack.pop(); Token tokenOp1 = stack.pop();
         int numOp1 = 0; int numOp2 = 0;
         try {
             if (tokenOp1.getType().equals("VAR_KW")) {
                 if (table.getVariableType(tokenOp1.getValue()).equals("newList"))
                     Start.currentOutput.append("Ошибка: несовместимость типов (").append(operation).append(")");
             }
-
             if (tokenOp2.getType().equals("VAR_KW")) {
                 if (table.getVariableType(tokenOp2.getValue()).equals("newList"))
                     Start.currentOutput.append("Ошибка: несовместимость типов (").append(operation).append(")");
@@ -43,6 +42,7 @@ public class StackMachine {
 
     private Token arithmetic_result(String operation) {
         Pair<Integer, Integer> tokensPair = getOpTokens(operation);
+        System.out.println("numOp1 = " + tokensPair.getKey() + ", numOp2 = " + tokensPair.getValue());
         int result = 0;
         switch (operation) {
             case "+": result = tokensPair.getKey() + tokensPair.getValue(); break;
@@ -101,6 +101,7 @@ public class StackMachine {
                         break;
                     case "GOTO_BY_FALSE":
                         it = stack.pop();
+                        System.out.println(stack.toString());
                         if (stack.pop().getValue().equals("false")) {
                             i = Integer.valueOf(it.getValue()) - 1;
                         }
