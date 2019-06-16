@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'IDELangLudux'
+version '1.1'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.10.1'
+}
+
+compileJava.options.encoding = "UTF-8"
+
+task customFatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'IDE.Main'
+    }
+    baseName = 'IDELangLudux'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+sourceSets {
+    main {
+        resources {
+            includes = ["sample.fxml"]
+        }
+    }
+}

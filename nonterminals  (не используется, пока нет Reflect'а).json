@@ -1,0 +1,14 @@
+"GRAMMAR": [
+  {"language": "expr*"},
+  {"expr": "values | cycles | write | sys"},
+      {"values": "change_value | list_operation"},
+          {"change_value": "VAR_KW (ASSIGN_OP_KW math_op | list_operation value) END"},
+          {"list_operation": "GET_KW | SET_KW | OPERATE_LIST_KW"},
+  {"cycles": "while | for | repeat"},
+  {"write": "WRITE_KW math_operation END"},
+  {"sys": "WRITE_KW SYS END"},
+  "change_value | while_cycle | write | for | if ,,
+    "expr -> ",
+    "",
+    ""
+],

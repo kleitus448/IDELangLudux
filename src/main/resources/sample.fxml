@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane fx:id="mainGrid" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IDE.Controllers.MainController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="506.0" minWidth="10.0" prefWidth="502.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="443.0" minWidth="10.0" prefWidth="226.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="443.0" minWidth="10.0" prefWidth="147.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints maxHeight="371.0" minHeight="0.0" prefHeight="38.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="394.0" minHeight="10.0" prefHeight="331.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="217.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="272.0" minHeight="10.0" prefHeight="237.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Button fx:id="logsButton" mnemonicParsing="false" text="Показать окно логов" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets right="50.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="checkButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="29.0" prefWidth="227.0" text="Вывести информацию по программе" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets left="50.0" />
+         </GridPane.margin>
+      </Button>
+      <ComboBox fx:id="caFont" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" />
+      <ComboBox fx:id="caSize" prefHeight="25.0" prefWidth="135.0" GridPane.columnIndex="2" />
+      <TextArea fx:id="outArea" editable="false" prefHeight="268.0" prefWidth="877.0" GridPane.columnSpan="3" GridPane.rowIndex="3">
+         <font>
+            <Font size="14.0" />
+         </font></TextArea>
+      <ComboBox fx:id="laFont" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <ComboBox fx:id="laSize" prefHeight="25.0" prefWidth="135.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Button fx:id="buttonOpenFile" mnemonicParsing="false" prefHeight="11.0" prefWidth="150.0" text="Открыть файл">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="buttonSaveFile" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Сохранить файл" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <Button fx:id="buttonSaveFileAs" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="7.0" prefWidth="150.0" text="Cохранить файл как" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Button>
+   </children>
+</GridPane>
