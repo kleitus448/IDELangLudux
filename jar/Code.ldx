@@ -1,0 +1,21 @@
+a = 6;
+if (a > (2 + 3)) {
+    a = a + 2;
+    write (2 + 3);
+}
+
+k = 0;
+while (k < 3) {
+	write k;
+	k = k + 1;
+}
+
+enable q is newList;
+q append 1;
+q ++ 2;
+write q;
+q << 1;
+q has 2;
+q has 3;
+q -- 1;
+write q;
