@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class Main extends Application {
 
-    public static final String name = "LuDux IDE 1.1";
+    public static final String name = "LuDux IDE 1.2";
     public static Lexer lexer;
     public static StringBuilder logs;
     public static StringBuilder output;

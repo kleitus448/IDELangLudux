@@ -6,7 +6,7 @@
     "css": {"-fx-fill": "blue"}
   },
   {
-    "kw": "STRUCTURE_KW",
+    "kw": "LIST_KW",
     "reg_expr": "newList",
     "css": {"-fx-fill": "blue"}
   },

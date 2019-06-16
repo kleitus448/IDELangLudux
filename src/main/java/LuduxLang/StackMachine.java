@@ -82,7 +82,7 @@ public class StackMachine {
                     case "NUM_KW":
                     case "LABEL_START":
                     case "LABEL_END":
-                    case "STRUCTURE_KW":
+                    case "LIST_KW":
                         stack.push(currentToken);
                         break;
                     case "ARITHMETIC_OP_KW":

@@ -170,7 +170,7 @@ public class RPN {
             switch (type) {
                 case "VAR_KW":
                 case "NUM_KW":
-                case "STRUCTURE_KW":
+                case "LIST_KW":
                     outRPN.add(token);
                     break;
                 case "ARITHMETIC_OP_KW":

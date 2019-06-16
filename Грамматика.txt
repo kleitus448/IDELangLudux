@@ -1,0 +1,40 @@
+lang → expr*
+expr → var_expr | while | loop | if | write | list_enable | list_oper
+var_expr → expr_assign | list_oper
+while → WHILE_KW loop
+loop → while | for
+if → IF_KW condition_in_brackets condition_body
+write → WRITE_KW operand END
+list_enable → ENABLE_KW VAR_KW IS_KW LIST_KW END_KW
+list_oper → operand END_KW
+expr_assign → VAR_KW ASSIGN_OP expr_arithmetic END_KW
+for → FOR_KW for_state condition_body
+condition_in_brackets → OPEN_BRACKET_KW condition CLOSE_BRACKET_KW
+condition_body → OPEN_BRACE_KW expr CLOSE_BRACE_KW
+operand → expr_in_brackets | operation | one_operand
+expr_arithmetic → ARITHMETIC_OP_KW operand
+for_state → OPEN_BRACKET_KW expr_assign condition END_KW expr_assign CLOSE_BRACKET_KW
+condition → operand LOGIC_KW operand
+expr_in_brackets → OPEN_BRACKET_KW expr_arithmetic CLOSE_BRACKET_KW
+operation → VAR_KW GET_KW operand
+one_operand → (VAR_KW | NUM_KW)
+
+WHILE_KW -> while
+LIST_KW -> newList
+OPERATE_LIST_KW -> append|++|delete|--|has|<<
+WRITE_KW -> write
+FOR_KW -> for
+IF_KW -> if
+IS_KW -> is
+ENABLE_KW -> enable
+GET_KW -> get
+OPEN_BRACKET_KW -> (
+CLOSE_BRACKET_KW -> )
+ASSIGN_OP_KW -> =
+ARITHMETIC_OP_KW -> +|-|*|/
+END_KW -> ;
+OPEN_BRACE_KW -> {
+CLOSE_BRACE_KW -> }
+LOGIC_KW -> <|>|==|<=|>=|!=
+VAR_KW -> [a-zA-Z]+[0-9]*
+NUM_KW -> ^0|([1-9][0-9]*)$

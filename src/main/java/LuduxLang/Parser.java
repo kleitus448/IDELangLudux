@@ -1,7 +1,5 @@
 package LuduxLang;
 
-import IDE.Main;
-import LuduxLang.Token;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -41,19 +39,23 @@ public class Parser {
 
         switch (Objects.requireNonNull(token).getType()) {
             case "VAR_KW":
-                switch (Objects.requireNonNull(copy.poll()).getType()) {
-                    case "ASSIGN_OP_KW": expr_success = expr_assign_method(); break;
-                    case "OPERATE_LIST_KW": expr_success = struct_oper_method(); break;
-                    default:
-                         mustBe("[ASSIGN_OP_KW|OPERATE_LIST_KW]", token);
-                        return false;
-                } break;
-            case "IF_KW": expr_success = if_expr_method(); break;
-            case "WHILE_KW": case "FOR_KW": expr_success =  loop_method(); break;
-            case "ENABLE_KW": expr_success = structure_enable_method(); break;
-            case "WRITE_KW": expr_success =  write_method(); break;
+                expr_success = var_expr_method(Objects.requireNonNull(copy.poll()));
+                break;
+            case "IF_KW":
+                expr_success = if_method();
+                break;
+            case "WHILE_KW":
+            case "FOR_KW":
+                expr_success = loop_method();
+                break;
+            case "ENABLE_KW":
+                expr_success = list_enable_method();
+                break;
+            case "WRITE_KW":
+                expr_success = write_method();
+                break;
             default:
-                mustBe("[IF_KW|WHILE_KW|FOR_KW|ENABLE_KW|WRITE_KW]", token);
+                mustBe("[VAR_KW|IF_KW|WHILE_KW|FOR_KW|ENABLE_KW|WRITE_KW]", token);
                 return false;
         }
         return expr_success;
@@ -72,16 +74,27 @@ public class Parser {
     }
 
     private boolean while_method() {
-        return while_keyword() & cond_in_brackets_method() & cycle_body_method();
+        return while_keyword() && condition_in_brackets_method() && condition_body_method();
     }
-    private boolean cond_in_brackets_method() {
-        return openBracket_keyword() & cond_method() & closeBracket_keyword();
+    private boolean condition_in_brackets_method() {
+        return openBracket_keyword() && condition_method() && closeBracket_keyword();
     }
-    private boolean cond_method()  {
-        return operand_method() & logic_keyword()& operand_method();
+    private boolean condition_method()  {
+        return operand_method() && logic_keyword() && operand_method();
     }
 
-    private boolean cycle_body_method()  {
+    private boolean var_expr_method(Token token) {
+        switch (token.getType()) {
+            case "ASSIGN_OP_KW": return expr_assign_method();
+            case "OPERATE_LIST_KW": return list_oper_method();
+            default:
+                mustBe("[ASSIGN_OP_KW|OPERATE_LIST_KW]", token);
+                return false;
+        }
+
+    }
+
+    private boolean condition_body_method()  {
         Token token; boolean stop = false;
         boolean body_success;
         if (!(openBrace_keyword())) return false;
@@ -90,20 +103,27 @@ public class Parser {
             token = copy.poll();
             switch (Objects.requireNonNull(token).getType()) {
                 case "VAR_KW":
-                    switch (Objects.requireNonNull(copy.poll()).getType()) {
-                        case "ASSIGN_OP_KW": body_success = expr_assign_method(); break;
-                        case "OPERATE_LIST_KW": body_success = struct_oper_method(); break;
-                        default:
-                            mustBe("[ASSIGN_OP_KW|OPERATE_LIST_KW]", token);
-                            return false;
-                    } break;
-                case "WHILE_KW": case "FOR_KW": body_success = loop_method(); break;
-                case "IF_KW": body_success = if_expr_method(); break;
-                case "ENABLE_KW": body_success = structure_enable_method(); break;
-                case "CLOSE_BRACE_KW": body_success = closeBrace_keyword(); stop = true; break;
-                case "WRITE_KW": body_success = write_method(); break;
+                    body_success = var_expr_method(Objects.requireNonNull(copy.poll()));
+                    break;
+                case "WHILE_KW":
+                case "FOR_KW":
+                    body_success = loop_method();
+                    break;
+                case "IF_KW":
+                    body_success = if_method();
+                    break;
+                case "ENABLE_KW":
+                    body_success = list_enable_method();
+                    break;
+                case "CLOSE_BRACE_KW":
+                    body_success = closeBrace_keyword();
+                    stop = true;
+                    break;
+                case "WRITE_KW":
+                    body_success = write_method();
+                    break;
                 default:
-                    mustBe("[VAR_KW|WHILE_KW|FOR_KW|IF_KW|ENABLE_KW", token);
+                    mustBe("[VAR_KW|WHILE_KW|IF_KW|ENABLE_KW|CLOSE_BRACE_KW|WRITE_KW]", token);
                     return false;
             }
             if (!body_success) return false;
@@ -112,67 +132,61 @@ public class Parser {
     }
 
     private boolean for_method() {
-        return for_keyword() & for_state_method() & cycle_body_method();
+        return for_keyword() && for_state_method() && condition_body_method();
     }
 
     private boolean for_state_method()  {
-        return openBracket_keyword() &
-        expr_assign_method() &
-        cond_method() &
-        end_keyword() &
-        i_change_method() &
+        return openBracket_keyword() &&
+        expr_assign_method() &&
+        condition_method() &&
+        end_keyword() &&
+        expr_assign_method() &&
         closeBracket_keyword();
     }
 
-    private boolean i_change_method()  {
-        return var() &
-        op_assign_kw() &
-        expr_arithmetic_method();
-    }
-
-    private boolean if_expr_method()  {
-        return if_keyword() &
-        cond_in_brackets_method() &
-        cycle_body_method();
+    private boolean if_method()  {
+        return if_keyword() &&
+        condition_in_brackets_method() &&
+        condition_body_method();
     }
 
     private boolean write_method()  {
-        return write_keyword() &
-        operand_method() &
+        return write_keyword() &&
+        operand_method() &&
         end_keyword();
     }
 
-    private boolean structure_enable_method()  {
-        return enable_keyword() &
-        var() &
-        is_keyword() &
-        structure_keyword() &
+    private boolean list_enable_method()  {
+        return enable_keyword() &&
+        var_keyword() &&
+        is_keyword() &&
+        list_keyword() &&
         end_keyword();
     }
 
-    private boolean getOperation()  {
-        return var() &
-        get_keyword() &
+    private boolean operation_method()  {
+        return var_keyword() &&
+        get_keyword() &&
         operand_method();
     }
 
-    private boolean struct_oper_method()  {
-        return var() &
-        op_struct_keyword() &
-        operand_method() &
+    private boolean list_oper_method()  {
+        return var_keyword() &&
+        operate_list_keyword() &&
+        operand_method() &&
         end_keyword();
     }
 
     private boolean expr_assign_method()  {
-        return var() &
-        op_assign_kw() &
-        expr_arithmetic_method() &
+        return var_keyword() &&
+        assign_op_keyword() &&
+        expr_arithmetic_method() &&
         end_keyword();
     }
 
-    private boolean in_brackets_method()  {
-        return openBracket_keyword() &
-        expr_arithmetic_method() &
+    private boolean expr_in_brackets_method()  {
+        return openBracket_keyword() &&
+        expr_arithmetic_method() &&
         closeBracket_keyword();
     }
 
@@ -180,7 +194,7 @@ public class Parser {
         boolean expr_arithmetic_success;
         if (!operand_method()) return false;
         while (tokens.peek() != null && tokens.peek().getType().equals("ARITHMETIC_OP_KW")) {
-            expr_arithmetic_success = op_arithmetic_keyword() & operand_method();
+            expr_arithmetic_success = arithmetic_op_keyword() && operand_method();
             if (!expr_arithmetic_success) return false;
         }
         return true;
@@ -189,10 +203,10 @@ public class Parser {
     private boolean operand_method()  {
         LinkedList<Token> t = new LinkedList<>(tokens);
         if (Objects.requireNonNull(t.poll()).getType().equals("OPEN_BRACKET_KW")) {
-            return in_brackets_method();
+            return expr_in_brackets_method();
         } else {
             if (Objects.requireNonNull(t.poll()).getType().equals("GET_KW")) {
-                return getOperation();
+                return operation_method();
             } else {
                 return one_operand_method();
             }
@@ -202,7 +216,7 @@ public class Parser {
     private boolean one_operand_method()  {
         Token token = tokens.peek();
         switch (Objects.requireNonNull(token).getType()) {
-            case "VAR_KW": return var();
+            case "VAR_KW": return var_keyword();
             case "NUM_KW": return num_keyword();
             default:
                 mustBe("[VAR_KW|NUM_KW]", token);
@@ -226,15 +240,15 @@ public class Parser {
 
     //Передача в метод вариантов терминалов
 
-    private boolean var() {return check("VAR_KW");}
+    private boolean var_keyword() {return check("VAR_KW");}
 
-    private boolean op_assign_kw() {return check("ASSIGN_OP_KW");}
+    private boolean assign_op_keyword() {return check("ASSIGN_OP_KW");}
 
     private boolean openBracket_keyword() {return check("OPEN_BRACKET_KW");}
 
     private boolean closeBracket_keyword() {return check("CLOSE_BRACKET_KW");}
 
-    private boolean op_arithmetic_keyword() {return check("ARITHMETIC_OP_KW");}
+    private boolean arithmetic_op_keyword() {return check("ARITHMETIC_OP_KW");}
 
     private boolean num_keyword() {return check("NUM_KW");}
 
@@ -256,9 +270,9 @@ public class Parser {
 
     private boolean write_keyword() {return check("WRITE_KW");}
 
-    private boolean structure_keyword() {return check("STRUCTURE_KW");}
+    private boolean list_keyword() {return check("LIST_KW");}
 
-    private boolean op_struct_keyword() {return check("OPERATE_LIST_KW");}
+    private boolean operate_list_keyword() {return check("OPERATE_LIST_KW");}
     
     private boolean get_keyword() {return check("GET_KW");}
     
